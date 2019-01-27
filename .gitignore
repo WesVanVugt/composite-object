@@ -1,0 +1,6 @@
+node_modules/
+*.tgz
+baseline-latest.json
+baseline.json
+/test-package/ts/main.test.ts
+.nyc_output

@@ -5,10 +5,10 @@
         "module": "commonjs",
         "strict": true,
         "declaration": true,
+        "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "esModuleInterop": true,
         "newLine": "LF",
         "outDir": ".",
         "lib": [
@@ -16,8 +16,7 @@
         ]
     },
     "include": [
-        "ts/index.ts",
-        "ts/typings/**/*"
+        "ts/index.ts"
     ],
     "exclude": []
 }

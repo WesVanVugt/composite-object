@@ -5,7 +5,8 @@ export type CompositeObjectCopyMethod = "reference" | "on-write" | "keys";
 export interface CompositeObjectOptions {
     /**
      * Indicates when CompositeObject or RecursiveObject key data passed to the constructor is copied.
-     * * "reference": Never copy key data, referencing the original data instead. The most performant option.
+     * * "reference": Never copy key data, referencing the original data instead. The most performant option. Only
+     * supported for copying a RecursiveObject.
      * * "on-write": Copy the data as necessary when changes are made. Incurs a performance pentalty, but preserves
      * the original data.
      * * "keys": Copy the key data. More performant than "on-write" when there are few entries, but less performant
@@ -44,12 +45,12 @@ export class CompositeObject<K extends string, V> {
                     break;
                 case "on-write":
                     // When using copy-on-write, map being copied must also use copy-on-write mode
-                    entries.copiedSet = new WeakSet();
-                    this.copiedSet = new WeakSet();
-                case "reference":
+                    this.copiedSet = entries.copiedSet = new WeakSet();
                     this.keyLength = entries.keyLength;
                     this.data = entries.data;
                     break;
+                case "reference":
+                    throw new Error(`Copy method '${copyMethod}' is not supported when copying CompositeObject`);
                 default:
                     throw new Error(`Unrecognized copy method '${copyMethod}'`);
             }
@@ -114,15 +115,18 @@ export class CompositeObject<K extends string, V> {
 
     public clear(): void {
         this.data = {};
+        this.copiedSet = undefined;
         this.keyLength = 0;
     }
 
     public delete(key: K[]): boolean {
         if (!this.keyLength) {
+            this.clear();
             return false;
         }
         if (!key.length) {
             if (!hasProps(this.data)) {
+                this.clear();
                 return false;
             }
             this.clear();

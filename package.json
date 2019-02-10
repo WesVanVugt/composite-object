@@ -17,9 +17,8 @@
         "prepare": "npm run build",
         "build": "npm run clean && tsc && ts-node ts/scripts/update-typings.ts",
         "clean": "rm -rf index.js index.d.ts *.tgz",
-        "test": "npm run lint && nyc mocha --require ts-node/register ts/test/*.test.ts --reporter spec --colors",
+        "test": "npm run lint && nyc mocha --require ts-node/register ts/test/*.test.ts --colors",
         "test-package": "npm pack && cd test-package && npm i && npm test",
-        "bench": "node benchmark/index.js",
         "release": "np",
         "lint": "tslint ts/**/*.ts"
     },
@@ -34,7 +33,7 @@
     ],
     "dependencies": {},
     "devDependencies": {
-        "@types/chai": "4.1.7",
+        "@types/chai": "^4.1.7",
         "@types/mocha": "^5.2.5",
         "@types/node": "^10.12.18",
         "chai": "^4.2.0",

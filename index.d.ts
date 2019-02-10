@@ -5,7 +5,8 @@ export declare type CompositeObjectCopyMethod = "reference" | "on-write" | "keys
 export interface CompositeObjectOptions {
     /**
      * Indicates when CompositeObject or RecursiveObject key data passed to the constructor is copied.
-     * * "reference": Never copy key data, referencing the original data instead. The most performant option.
+     * * "reference": Never copy key data, referencing the original data instead. The most performant option. Only
+     * supported for copying a RecursiveObject.
      * * "on-write": Copy the data as necessary when changes are made. Incurs a performance pentalty, but preserves
      * the original data.
      * * "keys": Copy the key data. More performant than "on-write" when there are few entries, but less performant

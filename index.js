@@ -19,12 +19,12 @@ class CompositeObject {
                     break;
                 case "on-write":
                     // When using copy-on-write, map being copied must also use copy-on-write mode
-                    entries.copiedSet = new WeakSet();
-                    this.copiedSet = new WeakSet();
-                case "reference":
+                    this.copiedSet = entries.copiedSet = new WeakSet();
                     this.keyLength = entries.keyLength;
                     this.data = entries.data;
                     break;
+                case "reference":
+                    throw new Error(`Copy method '${copyMethod}' is not supported when copying CompositeObject`);
                 default:
                     throw new Error(`Unrecognized copy method '${copyMethod}'`);
             }
@@ -90,14 +90,17 @@ class CompositeObject {
     }
     clear() {
         this.data = {};
+        this.copiedSet = undefined;
         this.keyLength = 0;
     }
     delete(key) {
         if (!this.keyLength) {
+            this.clear();
             return false;
         }
         if (!key.length) {
             if (!hasProps(this.data)) {
+                this.clear();
                 return false;
             }
             this.clear();

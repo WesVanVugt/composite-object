@@ -1,6 +1,6 @@
 {
     "name": "composite-object",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "A module for mapping between multi-part string keys and values",
     "keywords": [
         "composite",

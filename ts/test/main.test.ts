@@ -212,6 +212,39 @@ describe("CompositeObject", () => {
         expect(mapCopy.has(["b", "a"])).to.equal(true, "Changes to the original map should not affect the copy");
     });
 
+    it('constructor(map, { copy: "on-write" }), .prototype.delete(zero_length_key)', () => {
+        const map = new CompositeObject<string, string>();
+        // tslint:disable-next-line:no-unused-expression
+        new CompositeObject(map, { copy: "on-write" });
+
+        expect((map as any).copiedSet).to.be.a("WeakSet");
+        expect(map.delete([])).to.equal(false, "delete when the map has no keyLength");
+        expect((map as any).copiedSet).to.equal(undefined);
+
+        map.set(["a"], "test");
+        // tslint:disable-next-line:no-unused-expression
+        new CompositeObject(map, { copy: "on-write" });
+        expect((map as any).copiedSet).to.be.a("WeakSet");
+        delete (map.get([]) as RecursiveObject<string, string>).a;
+        expect(map.delete([])).to.equal(false, "delete when the map has a keyLength but no records");
+        expect((map as any).copiedSet).to.equal(undefined);
+    });
+
+    it('constructor(map, { copy: "on-write" }), .prototype.clear()', () => {
+        const map = new CompositeObject<string, string>();
+        // Note: Unless a sub-map has multiple entries, pruning will cause the sub-map to remain unchanged since it
+        //   would instead be deleted by its parent.
+        map.set(["a"], "test");
+        const mapCopy = new CompositeObject(map, { copy: "on-write" });
+
+        expect(map.has(["a"])).to.equal(true);
+        expect((map as any).copiedSet).to.be.a("WeakSet");
+        map.clear();
+        expect(map.has(["a"])).to.equal(false);
+        expect((map as any).copiedSet).to.equal(undefined);
+        expect(mapCopy.has(["a"])).to.equal(true);
+    });
+
     it('constructor(map, { copy: "keys" })', () => {
         const map = new CompositeObject<string, string>();
         map.set(["a", "b"], "test").set(["b", "a"], "test2");
@@ -227,18 +260,24 @@ describe("CompositeObject", () => {
         expect(map.get(["a", "b"])).to.equal("test", "The original map should remain unchanged");
     });
 
-    it('constructor(map, { copy: "reference" })', () => {
-        const map = new CompositeObject<string, string>();
-        map.set(["a", "b"], "test").set(["b", "a"], "test2");
-        const mapCopy = new CompositeObject(map, { copy: "reference" });
+    it('constructor(recursiveObject, { copy: "reference" })', () => {
+        const obj: RecursiveObject<string, string> = { a: { b: "test" }, b: { a: "test2" } };
+        const mapCopy = new CompositeObject(obj, { copy: "reference", keyLength: 2 });
 
         expect((mapCopy as any).copiedSet).to.equal(undefined);
         expect(mapCopy.get(["a", "b"])).to.equal("test");
-        expect(mapCopy.get([])).to.equal(map.get([]), "The copy should use the same root map object");
+        expect(mapCopy.get([])).to.equal(obj, "The copy should use the same root map object");
 
         mapCopy.set(["a", "b"], "test3");
         expect(mapCopy.get(["a", "b"])).to.equal("test3");
-        expect(map.get(["a", "b"])).to.equal("test3", "The original map should also be changed");
+        expect((obj.a as typeof obj).b).to.equal("test3", "The original map should also be changed");
+    });
+
+    it('constructor(map, { copy: "reference" })', () => {
+        const map = new CompositeObject<string, string>();
+        expect(() => new CompositeObject(map, { copy: "reference" })).to.throw(
+            /^Copy method 'reference' is not supported when copying CompositeObject$/,
+        );
     });
 
     it('constructor(map, { copy: "invalid" })', () => {

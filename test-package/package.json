@@ -9,13 +9,13 @@
         "postinstall": "cp ../*.tgz package.tgz && npm i package.tgz --no-save && npm run importtests",
         "importtests": "cp ../ts/test/*.test.ts ts/",
         "clean": "rm -rf ts/main.test.ts package.tgz && npm un composite-object",
-        "test": "npm run lint && mocha --require ts-node/register ts/*.test.ts --reporter spec --colors",
+        "test": "npm run lint && mocha --require ts-node/register ts/*.test.ts --colors",
         "lint": "tslint ts/**/*.ts"
     },
     "main": "index.js",
     "dependencies": {},
     "devDependencies": {
-        "@types/chai": "4.1.7",
+        "@types/chai": "^4.1.7",
         "@types/mocha": "^5.2.5",
         "@types/node": "^10.12.18",
         "chai": "^4.2.0",

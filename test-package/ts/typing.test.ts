@@ -5,7 +5,7 @@ enum StringEnum {
     Two = "two",
 }
 
-describe("Typing Tests", () => {
+it("Typing Test", () => {
     const map = new CompositeObject2<"a", "b", boolean>();
     assertType<CompositeObject2<"a", "b", boolean>>(new CompositeObject2(map));
     assertType<CompositeObject2<"a", "b", boolean>>(new CompositeObject2(map.toJSON(), { keyLength: 2 }));

@@ -1,6 +1,6 @@
 # composite-object
 
-A module for mapping between multi-part string keys and values.
+A module for mapping between multi-part string keys and values
 
 ## Install
 
@@ -50,7 +50,7 @@ Determines when the keys for the provided `CompositeObject` or `Object` are copi
 
 ###### `"reference"`
 
-Never copy keys. Changes made will affect the source.
+Never copy keys. Changes made will affect the source. Only supported for copying an `Object`.
 
 ###### `"on-write"`
 
@@ -169,7 +169,8 @@ const subObject: Record<MyStringEnum, string> = compositeObject.get(["key-part",
 
 ## Related
 
--   [composite-map](https://github.com/WesVanVugt/composite-map) - An Map-based implementation of this module
+-   [composite-map](https://github.com/WesVanVugt/composite-map) - A module for mapping between multi-part keys and values.
+-   [json-key-map](https://github.com/WesVanVugt/json-key-map) - A module for mapping between JSON keys and values.
 
 ## License
 

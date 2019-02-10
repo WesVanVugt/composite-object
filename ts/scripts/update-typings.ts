@@ -1,12 +1,11 @@
-// tslint:disable:no-console
 import * as assert from "assert";
 import * as fs from "fs";
 import * as path from "path";
 
 const DEFINITIONS_FILE = path.resolve(__dirname, "../../index.d.ts");
 
-function getRecursiveObjectTypes(count: number, keys: string[]): string {
-    return Array.from(new Array(count))
+function getRecursiveObjectTypes(keys: string[]): string {
+    return keys
         .map((_, i) => {
             if (!i) {
                 return "export declare type RecursiveObject1<K1 extends string, V> = {\n    [P in K1]?: V;\n}";
@@ -97,7 +96,7 @@ function main(): void {
 
     content =
         content.slice(0, firstIndex) +
-        getRecursiveObjectTypes(count, keys) +
+        getRecursiveObjectTypes(keys) +
         "\n" +
         getCompositeMapDefinitions(keys) +
         content.slice(lastIndex + 1);
